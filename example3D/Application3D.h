@@ -5,6 +5,7 @@
 #include <vector>
 #include "Camera.h"
 #include "Model.h"
+class Texture;
 
 class Application3D : public aie::Application {
 public:
@@ -32,14 +33,11 @@ protected:
 	unsigned int m_VBO;
 	unsigned int m_IBO;
 
-	unsigned int m_programID;
-	unsigned int m_animProgramID;
-
-	unsigned int m_texture;
-
 	int rows;
 	int columns;
 
 	Model buddha;
 	Model cube;
+
+	Texture* m_texture;
 };

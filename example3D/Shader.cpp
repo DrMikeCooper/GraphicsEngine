@@ -3,6 +3,47 @@
 #include <fstream>
 #include <string>
 #include "Shader.h"
+#include "Texture.h"
+
+void Shader::Use()
+{
+	glUseProgram(m_id);
+}
+
+void Shader::SetInt(const char* name, int value)
+{
+	int loc = glGetUniformLocation(m_id, name);
+	glUniform1f(loc, value);
+}
+
+void Shader::SetFloat(const char* name, float value)
+{
+	int loc = glGetUniformLocation(m_id, name);
+	glUniform1f(loc, value);
+}
+
+void Shader::SetVector(const char* name, glm::vec3 value)
+{
+	int loc = glGetUniformLocation(m_id, name);
+	glUniform3f(loc, value.x, value.y, value.z);
+}
+
+void Shader::SetMatrix(const char* name, glm::mat4 value)
+{
+	int loc = glGetUniformLocation(m_id, name);
+	glUniformMatrix4fv(loc, 1, GL_FALSE, (float*)&value);
+}
+
+void Shader::SetTexture(const char* name, int slot, Texture* texture)
+{
+	// set texture slot 0 to use the texture we created earlier
+	glActiveTexture(GL_TEXTURE0 + slot);
+	glBindTexture(GL_TEXTURE_2D, texture->GetID());
+
+	// tell the shader where it is - use slot provided
+	unsigned int loc = glGetUniformLocation(m_id, name);
+	glUniform1i(loc, slot);
+}
 
 bool Shader::LoadShaderFromFile(const char* filePath, std::string& code)
 {

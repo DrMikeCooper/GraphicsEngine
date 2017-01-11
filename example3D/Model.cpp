@@ -1,14 +1,20 @@
 #include <string>
 #include "Model.h"
+#include "Shader.h"
+
+Shader* Model::defaultStatic = NULL;
+Shader* Model::defaultAnimated = NULL;
 
 bool Model::Load(const char* filename)
 {
+	bool result = false;
+
 	if (strstr(filename, ".obj") != NULL)
 	{
 		std::string err;
 		tinyobj::LoadObj(shapes, materials, err, filename);
 		CreateBuffersOBJ();
-		return true;
+		result = true;
 	}
 
 	if (strstr(filename, ".fbx") != NULL)
@@ -16,10 +22,10 @@ bool Model::Load(const char* filename)
 		fbxFile = new FBXFile();
 		fbxFile->load(filename);
 		CreateBuffersFBX();
-		return true;
+		result = true;
 	}
 
-	return false;
+	return result;
 }
 
 void Model::Update(float timer)
@@ -39,24 +45,23 @@ void Model::Update(float timer)
 	}
 }
 
-void Model::Draw(glm::mat4 transform, glm::mat4 cameraMatrix, unsigned int programID)
+void Model::Draw(glm::mat4 transform, glm::mat4 cameraMatrix, Shader* shader)
 {
 	glm::mat4 mvp = cameraMatrix * transform;
 
-	// get a ticket for the address of a named uniform in our shader code
-	unsigned int projectionViewUniform = glGetUniformLocation(programID, "MVP");
-	// pass a matrix through to that address
-	glUniformMatrix4fv(projectionViewUniform, 1, GL_FALSE, (float*)&mvp);
+	// use default shader if none has been supplied
+	if (shader == NULL)
+		shader = isAnimated() ? defaultAnimated : defaultStatic;
 
-	unsigned int modelUniform = glGetUniformLocation(programID, "M");
-	glUniformMatrix4fv(modelUniform, 1, GL_FALSE, (float*)&transform);
+	shader->SetMatrix("MVP", mvp);
+	shader->SetMatrix("M", transform);
 
 	if (isAnimated())
 	{
 		// grab the skeleton and animation we want to use
 		FBXSkeleton* skeleton = fbxFile->getSkeletonByIndex(0);
 		skeleton->updateBones();
-		int bones_location = glGetUniformLocation(programID, "bones");
+		int bones_location = glGetUniformLocation(shader->GetID(), "bones");
 		glUniformMatrix4fv(bones_location, skeleton->m_boneCount, GL_FALSE,
 			(float*)skeleton->m_bones);
 	}
@@ -161,4 +166,10 @@ void Model::CreateBuffersOBJ()
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
+}
+
+void Model::SetDefaultShaders(const char* basicVertex, const char* animVertex, const char* fragment)
+{
+	defaultStatic = new Shader(basicVertex, fragment);
+	defaultAnimated = new Shader(animVertex, fragment);
 }

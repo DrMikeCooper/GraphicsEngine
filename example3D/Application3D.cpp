@@ -7,9 +7,7 @@
 #include "Gizmos.h"
 #include "Input.h"
 #include "Shader.h"
-
-//#define STB_IMAGE_IMPLEMENTATION
-#include <../dependencies/stb/stb_image.h>
+#include "Texture.h"
 
 using glm::vec3;
 using glm::vec4;
@@ -22,25 +20,6 @@ struct Vertex {
 };
 
 
-
-unsigned int LoadTexture(const char* name)
-{
-	unsigned int texture;
-
-	int imageWidth = 0, imageHeight = 0, imageFormat = 0;
-	unsigned char* data = stbi_load(name, &imageWidth, &imageHeight, &imageFormat, STBI_default);
-
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imageWidth, imageHeight,
-		0, GL_RGB, GL_UNSIGNED_BYTE, data);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-	stbi_image_free(data);
-
-	return texture;
-}
 
 // function to create a grid
 void Application3D::GenerateGrid(unsigned int rows, unsigned int cols)
@@ -139,11 +118,10 @@ bool Application3D::startup() {
 
 
 	
-	m_programID = Shader::CompileShaders("shaders\\BasicVertexShader.txt", "shaders\\BasicFragmentShader.txt");
-	m_animProgramID = Shader::CompileShaders("shaders\\AnimatedVertexShader.txt", "shaders\\BasicFragmentShader.txt");
+	Model::SetDefaultShaders("shaders\\BasicVertexShader.txt", "shaders\\AnimatedVertexShader.txt", "shaders\\BasicFragmentShader.txt");
 
 	GenerateGrid(rows, columns);
-	m_texture = LoadTexture("textures\\numbered_grid.tga");
+	m_texture = new Texture("textures\\numbered_grid.tga");
 	buddha.Load("characters\\pyro\\pyro.fbx");
 	cube.Load("data\\sphere.fbx");
 
@@ -217,48 +195,26 @@ void Application3D::draw() {
 	modelMatrix = glm::rotate(angle, vec3(0, 1, 0));
 	glm::mat4 mvp = cameraMatrix * modelMatrix;
 
-	glUseProgram(m_programID);
-
-	unsigned int camUniform = glGetUniformLocation(m_programID, "cameraPosition");
-	glUniform4f(camUniform, camera.GetPos().x, camera.GetPos().y, camera.GetPos().z, 1);
-
-	// set texture slot 0 to use the texture we created earlier
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, m_texture);
-	// tell the shader where it is - use slot 0
-	unsigned int loc = glGetUniformLocation(m_programID, "diffuse");
-	glUniform1i(loc, 0);
-
-	glBindVertexArray(m_VAO);
-	unsigned int indexCount = (rows - 1) * (columns - 1) * 6;
-	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
-
-	
+	Model::GetStatic()->Use();
+	Model::GetStatic()->SetVector("cameraPosition", camera.GetPos());
+	Model::GetStatic()->SetTexture("diffuse", 0, m_texture);
 
 	static float x = -5;
 	x += 0.1f;
 	if (x > 5)
 		x -= 10;
 	modelMatrix = glm::translate(vec3(x, 0, 0)) * modelMatrix;
-	cube.Draw(modelMatrix, cameraMatrix, m_programID);
+	cube.Draw(modelMatrix, cameraMatrix, NULL);
 
-	glUseProgram(m_animProgramID);
-	camUniform = glGetUniformLocation(m_animProgramID, "cameraPosition");
-	glUniform4f(camUniform, camera.GetPos().x, camera.GetPos().y, camera.GetPos().z, 1);
-
-	// set texture slot 0 to use the texture we created earlier
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, m_texture);
-	// tell the shader where it is - use slot 0
-	loc = glGetUniformLocation(m_animProgramID, "diffuse");
-	glUniform1i(loc, 0);
-
+	Model::GetAnimated()->Use();
+	Model::GetAnimated()->SetVector("cameraPosition", camera.GetPos());
+	Model::GetAnimated()->SetTexture("diffuse", 0, m_texture);
 
 	static float animTimer = 0;
 	animTimer += 0.1f;
 	buddha.Update(animTimer);
 
 	// draw a scaled down model
-	buddha.Draw(glm::scale(vec3(0.001f, 0.001f, 0.001f))*modelMatrix, cameraMatrix, m_animProgramID);
+	buddha.Draw(glm::scale(vec3(0.001f, 0.001f, 0.001f))*modelMatrix, cameraMatrix, NULL);
 	
 }
