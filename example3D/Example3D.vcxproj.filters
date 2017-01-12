@@ -16,6 +16,9 @@
     <Filter Include="tinyobj">
       <UniqueIdentifier>{22e4c944-fe16-4187-a6e6-5b720acbb1d2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{97f3639e-7ca6-4bdd-9935-84a51fa60d62}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -71,5 +74,16 @@
     <ClInclude Include="Texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\bin\shaders\AnimatedVertexShader.txt">
+      <Filter>Shaders</Filter>
+    </Text>
+    <Text Include="..\bin\shaders\BasicFragmentShader.txt">
+      <Filter>Shaders</Filter>
+    </Text>
+    <Text Include="..\bin\shaders\BasicVertexShader.txt">
+      <Filter>Shaders</Filter>
+    </Text>
   </ItemGroup>
 </Project>

@@ -3,6 +3,7 @@
 #include "Application.h"
 #include <glm/mat4x4.hpp>
 #include <vector>
+#include <AntTweakBar\include\AntTweakBar.h>
 #include "Camera.h"
 #include "Model.h"
 class Texture;
@@ -40,4 +41,6 @@ protected:
 	Model cube;
 
 	Texture* m_texture;
+
+	TwBar* m_bar;
 };
