@@ -3,7 +3,6 @@
 #include "Application.h"
 #include <glm/mat4x4.hpp>
 #include <vector>
-#include <AntTweakBar\include\AntTweakBar.h>
 #include "Camera.h"
 #include "Model.h"
 class Texture;
@@ -42,5 +41,8 @@ protected:
 
 	Texture* m_texture;
 
-	TwBar* m_bar;
+	glm::vec3 m_clearColour;
+	bool m_bDrawGizmoGrid;
+
+	float m_animTimer;
 };

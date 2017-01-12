@@ -2,7 +2,7 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 #include <GLFW/glfw3.h>
-
+#include <../dependencies/imgui/imgui.h>
 #include "Application3D.h"
 #include "Gizmos.h"
 #include "Input.h"
@@ -116,8 +116,6 @@ bool Application3D::startup() {
 										  getWindowWidth() / (float)getWindowHeight(),
 										  0.1f, 1000.f);
 
-
-	
 	Model::SetDefaultShaders("shaders\\BasicVertexShader.txt", "shaders\\AnimatedVertexShader.txt", "shaders\\BasicFragmentShader.txt");
 
 	GenerateGrid(rows, columns);
@@ -128,8 +126,8 @@ bool Application3D::startup() {
 	return true;
 }
 
-void Application3D::shutdown() {
-
+void Application3D::shutdown() 
+{
 	Gizmos::destroy();
 }
 
@@ -166,7 +164,7 @@ void Application3D::update(float deltaTime) {
 	Gizmos::addDisk(vec3(-5, 0, 5), 1, 16, vec4(1, 1, 0, 1));
 	Gizmos::addArc(vec3(-5, 0, -5), 0, 2, 1, 8, vec4(1, 0, 1, 1));
 
-	camera.Update();
+	
 
 	// quit if we press escape
 	aie::Input* input = aie::Input::getInstance();
@@ -179,6 +177,8 @@ void Application3D::draw() {
 
 	// wipe the screen to the background colour
 	clearScreen();
+	
+	camera.Update();
 
 	// update perspective in case window resized
 	m_projectionMatrix = camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight());
@@ -210,11 +210,13 @@ void Application3D::draw() {
 	Model::GetAnimated()->SetVector("cameraPosition", camera.GetPos());
 	Model::GetAnimated()->SetTexture("diffuse", 0, m_texture);
 
-	static float animTimer = 0;
-	animTimer += 0.1f;
-	buddha.Update(animTimer);
+	buddha.Update(m_animTimer);
 
 	// draw a scaled down model
 	buddha.Draw(glm::scale(vec3(0.001f, 0.001f, 0.001f))*modelMatrix, cameraMatrix, NULL);
 	
+
+	ImGui::ColorEdit3("clear color", glm::value_ptr(m_clearColour));
+	ImGui::Checkbox("Should render Gizmo grid", &m_bDrawGizmoGrid);
+	ImGui::SliderFloat("Animation", &m_animTimer, 0, 100);
 }
