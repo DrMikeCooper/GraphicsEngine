@@ -18,11 +18,11 @@ public:
 	static Shader* GetStatic() { return defaultStatic; }
 	static Shader* GetAnimated() { return defaultAnimated; }
 
+	bool isAnimated() { return fbxFile && fbxFile->getSkeletonCount() > 0; }
+
 private:
 	void CreateBuffersOBJ();
 	void CreateBuffersFBX();
-
-	bool isAnimated() { return fbxFile && fbxFile->getSkeletonCount() > 0; }
 
 	std::vector<tinyobj::shape_t> shapes;
 	std::vector<tinyobj::material_t> materials;

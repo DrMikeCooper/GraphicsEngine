@@ -5,6 +5,8 @@
 #include <vector>
 #include "Camera.h"
 #include "Model.h"
+#include "Scene.h"
+
 class Texture;
 
 class Application3D : public aie::Application {
@@ -19,30 +21,16 @@ public:
 	virtual void update(float deltaTime);
 	virtual void draw();
 
-	void GenerateGrid(unsigned int rows, unsigned int cols);
-
 protected:
 
 	Camera camera;
-
-	glm::mat4	m_viewMatrix;
-	glm::mat4	m_projectionMatrix;
-
-	// our vertex and index buffers
-	unsigned int m_VAO;
-	unsigned int m_VBO;
-	unsigned int m_IBO;
-
-	int rows;
-	int columns;
 
 	Model buddha;
 	Model cube;
 
 	Texture* m_texture;
 
-	glm::vec3 m_clearColour;
-	bool m_bDrawGizmoGrid;
+	Scene m_scene;
 
-	float m_animTimer;
+	int m_currentObject;
 };

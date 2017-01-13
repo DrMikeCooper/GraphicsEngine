@@ -49,10 +49,6 @@ void Model::Draw(glm::mat4 transform, glm::mat4 cameraMatrix, Shader* shader)
 {
 	glm::mat4 mvp = cameraMatrix * transform;
 
-	// use default shader if none has been supplied
-	if (shader == NULL)
-		shader = isAnimated() ? defaultAnimated : defaultStatic;
-
 	shader->SetMatrix("MVP", mvp);
 	shader->SetMatrix("M", transform);
 
