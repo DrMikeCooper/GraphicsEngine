@@ -1,3 +1,6 @@
+#include <gl_core_4_4.h>
+#include <glm\glm\glm.hpp>
+#include <glm\glm\ext.hpp>
 #include "Camera.h"
 #include "Scene.h"
 #include "Shader.h"
@@ -32,6 +35,12 @@ void Scene::UseShader(Shader* shader)
 	shader->Use();
 	shader->SetVector("cameraPosition", m_camera->GetPos());
 	shader->SetVector("lightDir", glm::normalize(m_lightDir));
-	// point lights....
+	// point lights
+	int loc = glGetUniformLocation(shader->GetID(), "lightPos");
+	glUniform3fv(loc, 4, &m_pointLights[0].x);
+	loc = glGetUniformLocation(shader->GetID(), "lightCol");
+	glUniform3fv(loc, 4, &m_pointLightColours[0].x);
+	loc = glGetUniformLocation(shader->GetID(), "lightPower");
+	glUniform1f(loc, m_pointLightPowers[0]);
 
 }

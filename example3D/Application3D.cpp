@@ -85,7 +85,13 @@ void Application3D::update(float deltaTime) {
 	Gizmos::addDisk(vec3(-5, 0, 5), 1, 16, vec4(1, 1, 0, 1));
 	Gizmos::addArc(vec3(-5, 0, -5), 0, 2, 1, 8, vec4(1, 0, 1, 1));
 
-	
+	vec3* points = (vec3*)m_scene.GetPointLights(0);
+	vec3* cols = (vec3*)m_scene.GetPointLights(0);
+	float* powers = m_scene.GetPointLightPowers(0);
+	for (int i = 0; i < 4; i++)
+	{
+		Gizmos::addSphere(points[i], 0.01f * powers[i], 8, 8, vec4(cols[i].x, cols[i].y, cols[i].z, 0.5));
+	}
 
 	// quit if we press escape
 	aie::Input* input = aie::Input::getInstance();
@@ -104,10 +110,26 @@ void Application3D::draw() {
 	// update perspective in case window resized
 	m_scene.Draw(getWindowWidth(), getWindowHeight());
 
+	ImGui::Begin("Lights");
 	ImGui::SliderFloat3("Light Pos", m_scene.GetLightDirPtr(), -20, 20);
+	ImGui::SliderFloat3("Light Pos1", m_scene.GetPointLights(0), -20, 20);
+	ImGui::SliderFloat3("Light Color1", m_scene.GetPointLightColours(0), 0, 1);
+	ImGui::SliderFloat("Light Power1", m_scene.GetPointLightPowers(0), 0, 100);
+	ImGui::SliderFloat3("Light Pos2", m_scene.GetPointLights(1), -20, 20);
+	ImGui::SliderFloat3("Light Color2", m_scene.GetPointLightColours(1), 0, 1);
+	ImGui::SliderFloat("Light Power2", m_scene.GetPointLightPowers(1), 0, 100);
+	ImGui::SliderFloat3("Light Pos3", m_scene.GetPointLights(2), -20, 20);
+	ImGui::SliderFloat3("Light Color3", m_scene.GetPointLightColours(2), 0, 1);
+	ImGui::SliderFloat("Light Power3", m_scene.GetPointLightPowers(2), 0, 100);
+	ImGui::SliderFloat3("Light Pos4", m_scene.GetPointLights(3), -20, 20);
+	ImGui::SliderFloat3("Light Color4", m_scene.GetPointLightColours(3), 0, 1);
+	ImGui::SliderFloat("Light Power4", m_scene.GetPointLightPowers(3), 0, 100);
+	ImGui::End();
+
+	ImGui::Begin("Objects");
 	ImGui::SliderInt("Object", &m_currentObject, 0, m_scene.GetInstances().size()-1);
 	Instance& inst = m_scene.GetInstances()[m_currentObject];
 	ImGui::SliderFloat3("Position", &inst.m_pos.x, -20, 20);
 	ImGui::SliderFloat3("Angles", &inst.m_euler.x, 0, 360);
-
+	ImGui::End();
 }
