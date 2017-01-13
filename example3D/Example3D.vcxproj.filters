@@ -76,13 +76,13 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\bin\shaders\AnimatedVertexShader.txt">
+    <Text Include="..\shaders\AnimatedVertexShader.txt">
       <Filter>Shaders</Filter>
     </Text>
-    <Text Include="..\bin\shaders\BasicFragmentShader.txt">
+    <Text Include="..\shaders\BasicFragmentShader.txt">
       <Filter>Shaders</Filter>
     </Text>
-    <Text Include="..\bin\shaders\BasicVertexShader.txt">
+    <Text Include="..\shaders\BasicVertexShader.txt">
       <Filter>Shaders</Filter>
     </Text>
   </ItemGroup>

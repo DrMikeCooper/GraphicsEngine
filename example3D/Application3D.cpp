@@ -34,7 +34,7 @@ bool Application3D::startup() {
 	// initialise gizmo primitive counts
 	Gizmos::create(10000, 10000, 10000, 10000);
 
-	Model::SetDefaultShaders("shaders\\BasicVertexShader.txt", "shaders\\AnimatedVertexShader.txt", "shaders\\BasicFragmentShader.txt");
+	Model::SetDefaultShaders("..\\shaders\\BasicVertexShader.txt", "..\\shaders\\AnimatedVertexShader.txt", "..\\shaders\\BasicFragmentShader.txt");
 
 	m_texture = new Texture("textures\\numbered_grid.tga");
 	buddha.Load("characters\\pyro\\pyro.fbx");

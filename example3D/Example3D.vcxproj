@@ -112,9 +112,9 @@
     <ClInclude Include="Texture.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\bin\shaders\AnimatedVertexShader.txt" />
-    <Text Include="..\bin\shaders\BasicFragmentShader.txt" />
-    <Text Include="..\bin\shaders\BasicVertexShader.txt" />
+    <Text Include="..\shaders\AnimatedVertexShader.txt" />
+    <Text Include="..\shaders\BasicFragmentShader.txt" />
+    <Text Include="..\shaders\BasicVertexShader.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
