@@ -9,6 +9,8 @@ class Texture;
 class Scene
 {
 public:
+	Scene();
+
 	void SetCamera(Camera* cam) { m_camera = cam; }
 	glm::mat4 GetCameraMatrix();
 

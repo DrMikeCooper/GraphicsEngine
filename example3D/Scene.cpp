@@ -8,6 +8,21 @@
 
 using namespace glm;
 
+Scene::Scene()
+{
+	//set out some nice lights
+	m_pointLightPowers[0] = m_pointLightPowers[1] = m_pointLightPowers[2] = m_pointLightPowers[3] = 50;
+	m_pointLights[0] = vec3(-10, 10, -10);
+	m_pointLights[1] = vec3(-10, 10, 10);
+	m_pointLights[2] = vec3(10, 10, -10);
+	m_pointLights[3] = vec3(10, 10, 10);
+
+	m_pointLightColours[0] = vec3(1, 0, 0);
+	m_pointLightColours[1] = vec3(1, 1, 0);
+	m_pointLightColours[2] = vec3(0, 1, 0);
+	m_pointLightColours[3] = vec3(0, 0, 1);
+}
+
 glm::mat4 Scene::GetCameraMatrix()
 {
 	return m_cameraMatrix;
