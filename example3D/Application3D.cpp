@@ -35,7 +35,7 @@ bool Application3D::startup() {
 	Gizmos::create(10000, 10000, 10000, 10000);
 
 	Model::SetDefaultShaders("..\\shaders\\BasicVertexShader.txt", "..\\shaders\\AnimatedVertexShader.txt", "..\\shaders\\BasicFragmentShader.txt");
-
+	ppShader = Shader::CompileShaders("..\\shaders\\PostProcessVertex.txt", "..\\shaders\\PostProcessFragment.txt");
 	m_texture = new Texture("textures\\numbered_grid.tga");
 	buddha.Load("characters\\pyro\\pyro.fbx");
 	cube.Load("data\\sphere.fbx");
@@ -46,6 +46,9 @@ bool Application3D::startup() {
 	m_scene.AddInstance(&buddha, vec3(0, 0, 0), vec3(0,0,0), 0.002f, m_texture);
 	m_scene.AddInstance(&buddha, vec3(-5, 0, 0), vec3(0, 90, 0), 0.004f, m_texture);
 	m_scene.AddInstance(&cube, vec3(5, 0, 0), vec3(0,0,0),1.0f, m_texture);
+
+	frameBuffer = new FrameBuffer(getWindowWidth(), getWindowHeight());
+	frameBuffer->SetUp();
 
 	return true;
 }
@@ -107,9 +110,12 @@ void Application3D::draw() {
 	
 	camera.Update();
 
-	// update perspective in case window resized
-	m_scene.Draw(getWindowWidth(), getWindowHeight());
+	frameBuffer->RenderScene(m_scene);
+	frameBuffer->Draw(ppShader);
 
+	//m_scene.Draw(getWindowWidth(), getWindowHeight());
+
+	
 	ImGui::Begin("Lights");
 	ImGui::SliderFloat3("Light Pos", m_scene.GetLightDirPtr(), -20, 20);
 	ImGui::SliderFloat3("Light Pos1", m_scene.GetPointLights(0), -20, 20);
@@ -133,3 +139,4 @@ void Application3D::draw() {
 	ImGui::SliderFloat3("Angles", &inst.m_euler.x, 0, 360);
 	ImGui::End();
 }
+

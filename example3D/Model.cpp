@@ -169,3 +169,32 @@ void Model::SetDefaultShaders(const char* basicVertex, const char* animVertex, c
 	defaultStatic = new Shader(basicVertex, fragment);
 	defaultAnimated = new Shader(animVertex, fragment);
 }
+
+void Model::MakePostProcessQuad()
+{
+	m_gl_info.resize(1);
+
+	// fullscreen quad
+	glm::vec2 halfTexel = 1.0f / glm::vec2(1280, 720) * 0.5f;
+	float vertexData[] = {
+		-1, -1, 0, 1, halfTexel.x, halfTexel.y,
+		1, 1, 0, 1, 1 - halfTexel.x, 1 - halfTexel.y,
+		-1, 1, 0, 1, halfTexel.x, 1 - halfTexel.y,
+		-1, -1, 0, 1, halfTexel.x, halfTexel.y,
+		1, -1, 0, 1, 1 - halfTexel.x, halfTexel.y,
+		1, 1, 0, 1, 1 - halfTexel.x, 1 - halfTexel.y,
+	};
+	glGenVertexArrays(1, &m_gl_info[0].m_VAO);
+	glBindVertexArray(m_gl_info[0].m_VAO);
+	glGenBuffers(1, &m_gl_info[0].m_VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, m_gl_info[0].m_VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 6,
+		vertexData, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE,
+		sizeof(float) * 6, 0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE,
+		sizeof(float) * 6, ((char*)0) + 16);
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);}

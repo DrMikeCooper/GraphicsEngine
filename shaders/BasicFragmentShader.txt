@@ -13,12 +13,17 @@ uniform vec3 lightPos[4];
 uniform vec3 lightCol[4];
 uniform float lightPower;
 
+float getDiffuse(vec4 normal, vec4 light)
+{
+	return clamp(dot(light, normal), 0, 1);
+}
+
 void main() 
 { 
 	vec4 light = vec4(lightDir, 0);
 
 	// get the diffuse and ambient intensity
-	float intensity = clamp(dot(light, worldNormal), 0, 1) + 0.1;
+	float intensity = getDiffuse(worldNormal, light) + 0.1;
 	
 	// get the unit vector from position to camera
 	vec4 toCamera = normalize(worldPosition - vec4(cameraPosition,1));
@@ -42,7 +47,7 @@ void main()
 		float dist = length(light0);
 		light0 = normalize(light0);
 		float power0 = lightPower/(dist*dist);
-		intensity0 = clamp(dot(light0, worldNormal), 0, 1) * power0;
+		intensity0 = getDiffuse(worldNormal, light0) * power0;
 		specular0 = clamp(dot(refl, light0), 0, 1);
 		// raise to the power of 4 for tighter specular highlights
 		specular0 = specular0 *specular0;
@@ -51,3 +56,4 @@ void main()
 		fragColor = fragColor + texColor*intensity0 * vec4(lightCol[i],1) + vec4(specular0, specular0, specular0, 1);
 	}
 }
+

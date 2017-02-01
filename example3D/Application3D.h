@@ -6,6 +6,7 @@
 #include "Camera.h"
 #include "Model.h"
 #include "Scene.h"
+#include "FrameBuffer.h"
 
 class Texture;
 
@@ -27,10 +28,13 @@ protected:
 
 	Model buddha;
 	Model cube;
+	unsigned int ppShader;
 
 	Texture* m_texture;
-
+	
 	Scene m_scene;
+
+	FrameBuffer* frameBuffer;
 
 	int m_currentObject;
 };

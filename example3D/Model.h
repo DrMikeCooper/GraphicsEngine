@@ -14,9 +14,11 @@ public:
 	void Draw(glm::mat4 transform, glm::mat4 cameraMatrix, Shader* shader);
 	void Update(float timer);
 	static void SetDefaultShaders(const char* basicVertex, const char* animVertex, const char* fragment);
-
+	unsigned int GetVAO() { return m_gl_info[0].m_VAO; }
 	static Shader* GetStatic() { return defaultStatic; }
 	static Shader* GetAnimated() { return defaultAnimated; }
+
+	void MakePostProcessQuad();
 
 	bool isAnimated() { return fbxFile && fbxFile->getSkeletonCount() > 0; }
 

@@ -94,6 +94,7 @@
     <ClCompile Include="..\dependencies\tinyobjloader\tiny_obj_loader.cc" />
     <ClCompile Include="Application3D.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="FrameBuffer.cpp" />
     <ClCompile Include="Instance.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model.cpp" />
@@ -105,6 +106,7 @@
     <ClInclude Include="..\dependencies\tinyobjloader\tiny_obj_loader.h" />
     <ClInclude Include="Application3D.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="FrameBuffer.h" />
     <ClInclude Include="Instance.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Scene.h" />
@@ -115,6 +117,8 @@
     <Text Include="..\shaders\AnimatedVertexShader.txt" />
     <Text Include="..\shaders\BasicFragmentShader.txt" />
     <Text Include="..\shaders\BasicVertexShader.txt" />
+    <Text Include="..\shaders\PostProcessFragment.txt" />
+    <Text Include="..\shaders\PostProcessVertex.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

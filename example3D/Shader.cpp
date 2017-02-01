@@ -13,7 +13,7 @@ void Shader::Use()
 void Shader::SetInt(const char* name, int value)
 {
 	int loc = glGetUniformLocation(m_id, name);
-	glUniform1f(loc, value);
+	glUniform1i(loc, value);
 }
 
 void Shader::SetFloat(const char* name, float value)
