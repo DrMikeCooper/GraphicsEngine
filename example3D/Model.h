@@ -14,6 +14,7 @@ public:
 	void Draw(glm::mat4 transform, glm::mat4 cameraMatrix, Shader* shader);
 	void Update(float timer);
 	static void SetDefaultShaders(const char* basicVertex, const char* animVertex, const char* fragment);
+	static void SetDefaultShaders(Shader* basic, Shader* anim) { defaultStatic = basic; defaultAnimated = anim;	}
 	unsigned int GetVAO() { return m_gl_info[0].m_VAO; }
 	static Shader* GetStatic() { return defaultStatic; }
 	static Shader* GetAnimated() { return defaultAnimated; }

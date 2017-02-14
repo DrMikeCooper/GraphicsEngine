@@ -10,9 +10,6 @@ using namespace glm;
 
 void Instance::Init()
 {
-	if (m_shader == NULL)
-		m_shader = m_model->isAnimated() ? Model::GetAnimated() : Model::GetStatic();
-
 	currentAnim = -1;
 	m_timer = 0;
 }
@@ -24,10 +21,14 @@ void Instance::Update()
 
 void Instance::Draw(Scene* scene)
 {
+	Shader* shader = m_shader;
+	if (shader == NULL)
+		shader = m_model->isAnimated() ? Model::GetAnimated() : Model::GetStatic();
+
 	UpdateTransform();
-	scene->UseShader(m_shader);
-	m_shader->SetTexture("diffuse", 0, m_texture);
-	m_model->Draw(m_transform, scene->GetCameraMatrix(), m_shader);
+	scene->UseShader(shader);
+	shader->SetTexture("diffuse", 0, m_texture);
+	m_model->Draw(m_transform, scene->GetCameraMatrix(), shader);
 }
 
 void Instance::UpdateTransform()

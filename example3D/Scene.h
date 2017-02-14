@@ -15,7 +15,7 @@ public:
 	glm::mat4 GetCameraMatrix();
 
 	void AddInstance(const char* nm, Model* m, glm::vec3 pos, glm::vec3 angles = glm::vec3(0, 0, 0), float scale = 1, Texture* tex1 = NULL);
-	void Draw(float w, float h, unsigned int forbiddenTexture = 0);
+	void Draw(float w, float h);
 	void UseShader(Shader* shader);
 	void SetDirectionalLight(glm::vec3 dir) { m_lightDir = dir; }
 

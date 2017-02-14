@@ -33,7 +33,7 @@ void Scene::AddInstance(const char* nm, Model* m, glm::vec3 pos, glm::vec3 angle
 	m_instances.push_back(Instance(nm, m, pos, angles, scale, tex));
 }
 
-void Scene::Draw(float w, float h, unsigned int forbiddenTexture /*= 0*/)
+void Scene::Draw(float w, float h)
 {
 	mat4 projectionMatrix = m_camera->GetProjectionMatrix(w, h);
 	mat4 viewMatrix = m_camera->GetViewMatrix();
@@ -43,11 +43,8 @@ void Scene::Draw(float w, float h, unsigned int forbiddenTexture /*= 0*/)
 
 	for (int i = 0; i < m_instances.size(); i++)
 	{
-		if (forbiddenTexture == 0 || m_instances[i].UsesTexture(forbiddenTexture) == false)
-		{
-			m_instances[i].Update();
-			m_instances[i].Draw(this);
-		}
+		m_instances[i].Update();
+		m_instances[i].Draw(this);
 	}
 }
 

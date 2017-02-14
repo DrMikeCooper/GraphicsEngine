@@ -7,6 +7,7 @@
 #include "Model.h"
 #include "Scene.h"
 #include "FrameBuffer.h"
+#include "Shader.h"
 
 class Texture;
 
@@ -22,6 +23,11 @@ public:
 	virtual void update(float deltaTime);
 	virtual void draw();
 
+	
+
+	void SetUpDeferredRendering();
+	void DeferredRenderToBuffers();
+
 protected:
 
 	Camera camera;
@@ -36,6 +42,19 @@ protected:
 
 	FrameBuffer* frameBuffer;
 	FrameBuffer* ppFrameBuffer;
+
+	// deferred rendering shaders
+	Shader basicPos;
+	Shader animPos;
+	Shader basicNormal;
+	Shader animNormal;
+	Shader basicAlbedo;
+	Shader animAlbedo;
+
+	// deferred rendring frame buffers
+	FrameBuffer* posBuffer;
+	FrameBuffer* normalBuffer;
+	FrameBuffer* albedoBuffer;
 
 	Instance* char1;
 	Instance* char2;

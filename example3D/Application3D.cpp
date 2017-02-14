@@ -59,6 +59,34 @@ bool Application3D::startup() {
 	return true;
 }
 
+void Application3D::SetUpDeferredRendering()
+{
+	basicPos.CompileShaders("..\\shaders\\BasicVertexShader.txt", "..\\shaders\\DeferredPos.txt");
+	animPos.CompileShaders("..\\shaders\\AnimVertexShader.txt", "..\\shaders\\DeferredPos.txt");
+	basicNormal.CompileShaders("..\\shaders\\BasicVertexShader.txt", "..\\shaders\\DeferredNormal.txt");
+	animNormal.CompileShaders("..\\shaders\\AnimVertexShader.txt", "..\\shaders\\DeferredNormal.txt");
+	basicAlbedo.CompileShaders("..\\shaders\\BasicVertexShader.txt", "..\\shaders\\DeferredAlbedo.txt");
+	animAlbedo.CompileShaders("..\\shaders\\AnimVertexShader.txt", "..\\shaders\\DeferredAlbedo.txt");
+
+	posBuffer = new FrameBuffer(getWindowWidth(), getWindowHeight());
+	posBuffer->SetUp();
+	normalBuffer = new FrameBuffer(getWindowWidth(), getWindowHeight());
+	normalBuffer->SetUp();
+	albedoBuffer = new FrameBuffer(getWindowWidth(), getWindowHeight());
+	albedoBuffer->SetUp();
+}
+
+void Application3D::DeferredRenderToBuffers()
+{
+	Model::SetDefaultShaders(&basicPos, &animPos);
+	posBuffer->RenderScene(m_scene);
+	Model::SetDefaultShaders(&basicNormal, &animNormal);
+	normalBuffer->RenderScene(m_scene);
+	Model::SetDefaultShaders(&basicAlbedo, &animAlbedo);
+	albedoBuffer->RenderScene(m_scene);
+}
+
+
 void Application3D::shutdown() 
 {
 	Gizmos::destroy();
