@@ -35,6 +35,10 @@ protected:
 	Scene m_scene;
 
 	FrameBuffer* frameBuffer;
+	FrameBuffer* ppFrameBuffer;
+
+	Instance* char1;
+	Instance* char2;
 
 	int m_currentObject;
 };

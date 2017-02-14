@@ -38,17 +38,23 @@ bool Application3D::startup() {
 	ppShader = Shader::CompileShaders("..\\shaders\\PostProcessVertex.txt", "..\\shaders\\PostProcessFragment.txt");
 	m_texture = new Texture("textures\\numbered_grid.tga");
 	buddha.Load("characters\\pyro\\pyro.fbx");
-	cube.Load("data\\sphere.fbx");
+	cube.Load("data\\cube.fbx");
 
 	m_currentObject = 0;
 
-	// set up our scene
-	m_scene.AddInstance(&buddha, vec3(0, 0, 0), vec3(0,0,0), 0.002f, m_texture);
-	m_scene.AddInstance(&buddha, vec3(-5, 0, 0), vec3(0, 90, 0), 0.004f, m_texture);
-	m_scene.AddInstance(&cube, vec3(5, 0, 0), vec3(0,0,0),1.0f, m_texture);
-
 	frameBuffer = new FrameBuffer(getWindowWidth(), getWindowHeight());
 	frameBuffer->SetUp();
+
+	ppFrameBuffer = new FrameBuffer(getWindowWidth(), getWindowHeight());
+	ppFrameBuffer->SetUp();
+
+	// set up our scene
+	m_scene.AddInstance("char1", &buddha, vec3(0, 0, 0), vec3(0,0,0), 0.002f, m_texture);
+	m_scene.AddInstance("char2", &buddha, vec3(-5, 0, 0), vec3(0, 90, 0), 0.004f, m_texture);
+	m_scene.AddInstance("vidscreen", &cube, vec3(5, 0, 0), vec3(0,0,0),1.0f, frameBuffer->GetTexture());
+
+	char1 = m_scene.FindByName("char1");
+	char2 = m_scene.FindByName("char2");
 
 	return true;
 }
@@ -111,11 +117,19 @@ void Application3D::draw() {
 	camera.Update();
 
 	frameBuffer->RenderScene(m_scene);
-	frameBuffer->Draw(ppShader);
+	ppFrameBuffer->RenderScene(m_scene);
 
-	//m_scene.Draw(getWindowWidth(), getWindowHeight());
+	// this is the basic draw with no Frame Buffers
+	m_scene.Draw(getWindowWidth(), getWindowHeight());
 
+	// and this is the post-processing draw call
+	ppFrameBuffer->Draw(ppShader);
 	
+	ImGui::Begin("Animation");
+	ImGui::SliderFloat("Character1 Anim", &char1->m_timer, 0, 10);
+	ImGui::SliderFloat("Character2 Anim", &char2->m_timer, 0, 10);
+	ImGui::End();
+
 	ImGui::Begin("Lights");
 	ImGui::SliderFloat3("Light Pos", m_scene.GetLightDirPtr(), -20, 20);
 	ImGui::SliderFloat3("Light Pos1", m_scene.GetPointLights(0), -20, 20);

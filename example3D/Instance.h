@@ -10,7 +10,7 @@ class Shader;
 class Instance
 {
 public:
-	void Draw(Scene* scene);
+
 	Instance() : m_model(NULL),
 		m_texture(NULL),
 		m_texture2(NULL),
@@ -19,10 +19,15 @@ public:
 		m_pos(0, 0, 0),
 		m_euler(0, 0, 0),
 		m_scale(1, 1, 1) { Init();}
-	Instance(Model* model, glm::vec3 pos, glm::vec3 angles = glm::vec3(0, 0, 0), float scale = 1, Texture* tex = NULL) : m_model(model), m_shader(NULL), m_pos(pos), m_euler(angles), m_scale(scale, scale, scale), m_texture(tex) { Init(); }
+	Instance(const char* nm, Model* model, glm::vec3 pos, glm::vec3 angles = glm::vec3(0, 0, 0), float scale = 1, Texture* tex = NULL) : m_name(nm), m_model(model), m_shader(NULL), m_pos(pos), m_euler(angles), m_scale(scale, scale, scale), m_texture(tex) { Init(); }
 
 	void Init();
+	void Update();
+	void Draw(Scene* scene);
+
 	void UpdateTransform();
+	bool UsesTexture(unsigned int texture);
+
 	std::string m_name;
 	Model* m_model;
 	Texture* m_texture;

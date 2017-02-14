@@ -4,6 +4,7 @@
 #include "Model.h"
 #include "Scene.h"
 #include "Shader.h"
+#include "Texture.h"
 
 using namespace glm;
 
@@ -14,6 +15,11 @@ void Instance::Init()
 
 	currentAnim = -1;
 	m_timer = 0;
+}
+
+void Instance::Update()
+{
+	m_model->Update(m_timer);
 }
 
 void Instance::Draw(Scene* scene)
@@ -32,4 +38,9 @@ void Instance::UpdateTransform()
 		* glm::rotate(m_euler.y * rad, vec3(0, 1, 0))
 		* glm::rotate(m_euler.x * rad, vec3(1, 0, 0))
 		* glm::scale(m_scale);
+}
+
+bool Instance::UsesTexture(uint texture)
+{
+	return m_texture && m_texture->GetID() == texture;
 }

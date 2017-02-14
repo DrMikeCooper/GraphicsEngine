@@ -14,8 +14,8 @@ public:
 	void SetCamera(Camera* cam) { m_camera = cam; }
 	glm::mat4 GetCameraMatrix();
 
-	void AddInstance(Model* m, glm::vec3 pos, glm::vec3 angles = glm::vec3(0, 0, 0), float scale = 1, Texture* tex1 = NULL);
-	void Draw(float w, float h);
+	void AddInstance(const char* nm, Model* m, glm::vec3 pos, glm::vec3 angles = glm::vec3(0, 0, 0), float scale = 1, Texture* tex1 = NULL);
+	void Draw(float w, float h, unsigned int forbiddenTexture = 0);
 	void UseShader(Shader* shader);
 	void SetDirectionalLight(glm::vec3 dir) { m_lightDir = dir; }
 
@@ -25,6 +25,8 @@ public:
 	float* GetPointLightPowers(int i) { return &m_pointLightPowers[i]; }
 
 	std::vector<Instance>& GetInstances() { return m_instances; }
+
+	Instance* FindByName(const char* name);
 
 private:
 	Camera* m_camera;

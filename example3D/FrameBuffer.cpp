@@ -44,11 +44,11 @@ void FrameBuffer::RenderScene(Scene& scene)
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
 	glViewport(0, 0, width, height);
-	glClearColor(0.75f, 0.75f, 0.75f, 1);
+	glClearColor(0.75f, 0.75f, 0.75f, 1);  // could pass this in as argument, or ignore altogether
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// draw the actual scene here
-	scene.Draw((float)width, (float)height);
+	scene.Draw((float)width, (float)height, this->m_fboTexture);
 
 	// restore normal frame buffer after
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);

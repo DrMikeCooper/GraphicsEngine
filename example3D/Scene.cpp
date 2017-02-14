@@ -28,12 +28,12 @@ glm::mat4 Scene::GetCameraMatrix()
 	return m_cameraMatrix;
 }
 
-void Scene::AddInstance(Model* m, glm::vec3 pos, glm::vec3 angles /*= glm::vec3(0, 0, 0)*/, float scale /*= 1*/, Texture* tex /*=NULL*/)
+void Scene::AddInstance(const char* nm, Model* m, glm::vec3 pos, glm::vec3 angles /*= glm::vec3(0, 0, 0)*/, float scale /*= 1*/, Texture* tex /*=NULL*/)
 {
-	m_instances.push_back(Instance(m, pos, angles, scale, tex));
+	m_instances.push_back(Instance(nm, m, pos, angles, scale, tex));
 }
 
-void Scene::Draw(float w, float h)
+void Scene::Draw(float w, float h, unsigned int forbiddenTexture /*= 0*/)
 {
 	mat4 projectionMatrix = m_camera->GetProjectionMatrix(w, h);
 	mat4 viewMatrix = m_camera->GetViewMatrix();
@@ -42,7 +42,13 @@ void Scene::Draw(float w, float h)
 	aie::Gizmos::draw(m_cameraMatrix);
 
 	for (int i = 0; i < m_instances.size(); i++)
-		m_instances[i].Draw(this);
+	{
+		if (forbiddenTexture == 0 || m_instances[i].UsesTexture(forbiddenTexture) == false)
+		{
+			m_instances[i].Update();
+			m_instances[i].Draw(this);
+		}
+	}
 }
 
 void Scene::UseShader(Shader* shader)
@@ -58,4 +64,14 @@ void Scene::UseShader(Shader* shader)
 	loc = glGetUniformLocation(shader->GetID(), "lightPower");
 	glUniform1f(loc, m_pointLightPowers[0]);
 
+}
+
+Instance* Scene::FindByName(const char* name)
+{
+	for (int i = 0; i < m_instances.size(); i++)
+	{
+		if (m_instances[i].m_name == name)
+			return &m_instances[i];
+	}
+	return NULL;
 }
