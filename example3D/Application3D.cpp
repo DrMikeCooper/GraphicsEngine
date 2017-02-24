@@ -43,10 +43,7 @@ bool Application3D::startup() {
 	m_currentObject = 0;
 
 	frameBuffer = new FrameBuffer(getWindowWidth(), getWindowHeight());
-	frameBuffer->SetUp();
-
 	ppFrameBuffer = new FrameBuffer(getWindowWidth(), getWindowHeight());
-	ppFrameBuffer->SetUp();
 
 	// set up our scene
 	m_scene.AddInstance("char1", &buddha, vec3(0, 0, 0), vec3(0,0,0), 0.002f, m_texture);
@@ -56,24 +53,28 @@ bool Application3D::startup() {
 	char1 = m_scene.FindByName("char1");
 	char2 = m_scene.FindByName("char2");
 
+	SetUpDeferredRendering();
+
 	return true;
 }
 
 void Application3D::SetUpDeferredRendering()
 {
-	basicPos.CompileShaders("..\\shaders\\BasicVertexShader.txt", "..\\shaders\\DeferredPos.txt");
-	animPos.CompileShaders("..\\shaders\\AnimVertexShader.txt", "..\\shaders\\DeferredPos.txt");
-	basicNormal.CompileShaders("..\\shaders\\BasicVertexShader.txt", "..\\shaders\\DeferredNormal.txt");
-	animNormal.CompileShaders("..\\shaders\\AnimVertexShader.txt", "..\\shaders\\DeferredNormal.txt");
-	basicAlbedo.CompileShaders("..\\shaders\\BasicVertexShader.txt", "..\\shaders\\DeferredAlbedo.txt");
-	animAlbedo.CompileShaders("..\\shaders\\AnimVertexShader.txt", "..\\shaders\\DeferredAlbedo.txt");
+	basicPos.Compile("..\\shaders\\BasicVertexShader.txt", "..\\shaders\\DeferredPos.txt");
+	animPos.Compile("..\\shaders\\AnimatedVertexShader.txt", "..\\shaders\\DeferredPos.txt");
+	basicNormal.Compile("..\\shaders\\BasicVertexShader.txt", "..\\shaders\\DeferredNormal.txt");
+	animNormal.Compile("..\\shaders\\AnimatedVertexShader.txt", "..\\shaders\\DeferredNormal.txt");
+	basicAlbedo.Compile("..\\shaders\\BasicVertexShader.txt", "..\\shaders\\DeferredAlbedo.txt");
+	animAlbedo.Compile("..\\shaders\\AnimatedVertexShader.txt", "..\\shaders\\DeferredAlbedo.txt");
+	deferredRenderer.Compile("..\\shaders\\PostProcessVertex.txt", "..\\shaders\\DeferredFragment.txt");
 
 	posBuffer = new FrameBuffer(getWindowWidth(), getWindowHeight());
-	posBuffer->SetUp();
 	normalBuffer = new FrameBuffer(getWindowWidth(), getWindowHeight());
-	normalBuffer->SetUp();
 	albedoBuffer = new FrameBuffer(getWindowWidth(), getWindowHeight());
-	albedoBuffer->SetUp();
+
+	deferredBuffers[1] = posBuffer->GetTexture()->GetID();
+	deferredBuffers[0] = normalBuffer->GetTexture()->GetID();
+	deferredBuffers[2] = albedoBuffer->GetTexture()->GetID();
 }
 
 void Application3D::DeferredRenderToBuffers()
@@ -84,6 +85,8 @@ void Application3D::DeferredRenderToBuffers()
 	normalBuffer->RenderScene(m_scene);
 	Model::SetDefaultShaders(&basicAlbedo, &animAlbedo);
 	albedoBuffer->RenderScene(m_scene);
+
+
 }
 
 
@@ -148,10 +151,13 @@ void Application3D::draw() {
 	ppFrameBuffer->RenderScene(m_scene);
 
 	// this is the basic draw with no Frame Buffers
-	m_scene.Draw(getWindowWidth(), getWindowHeight());
+	//m_scene.Draw(getWindowWidth(), getWindowHeight());
 
 	// and this is the post-processing draw call
-	ppFrameBuffer->Draw(ppShader);
+	//ppFrameBuffer->Draw(ppShader);
+
+	DeferredRenderToBuffers();
+	ppFrameBuffer->Draw(&deferredRenderer, deferredBuffers);
 	
 	ImGui::Begin("Animation");
 	ImGui::SliderFloat("Character1 Anim", &char1->m_timer, 0, 10);

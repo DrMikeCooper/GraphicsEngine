@@ -3,15 +3,18 @@
 
 class Scene;
 class Model;
+class Shader;
 
 class FrameBuffer
 {
 public:
-	FrameBuffer(int w, int h) : width(w), height(h) {}
+	FrameBuffer(int w, int h) : width(w), height(h) { SetUp(); }
 
 	void SetUp();
 	void RenderScene(Scene& scene);
 	void Draw(unsigned int shader);
+	// deferred rendering
+	void Draw(Shader* shader, unsigned int buffers[]);
 
 	Texture* GetTexture() { return &frameTexture; }
 

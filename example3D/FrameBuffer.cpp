@@ -3,6 +3,7 @@
 #include "FrameBuffer.h"
 #include "Scene.h"
 #include "Model.h"
+#include "Shader.h"
 
 Model* FrameBuffer::m_model = NULL;
 
@@ -61,10 +62,25 @@ void FrameBuffer::Draw(unsigned int shader)
 {
 	// draw out full-screen quad
 	glUseProgram(shader);
+
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_fboTexture);
 	int loc = glGetUniformLocation(shader, "target");
 	glUniform1i(loc, 0);
+
+	glBindVertexArray(m_model->GetVAO());
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+}
+
+void FrameBuffer::Draw(Shader* shader, unsigned int buffers[])
+{
+	// draw out full-screen quad
+	shader->Use();
+
+	shader->SetTexture("pos", 0, buffers[0]);
+	shader->SetTexture("normal", 1, buffers[1]);
+	shader->SetTexture("albedo", 2, buffers[2]);
+
 	glBindVertexArray(m_model->GetVAO());
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 }

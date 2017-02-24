@@ -1,0 +1,13 @@
+#version 410
+in vec4 worldNormal;
+in vec4 worldPosition;
+in vec2 uv;
+
+out vec4 fragColor;
+uniform sampler2D diffuse;
+
+void main() 
+{ 
+	fragColor = texture(diffuse, uv);
+}
+

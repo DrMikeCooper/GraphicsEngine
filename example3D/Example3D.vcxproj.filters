@@ -97,5 +97,17 @@
     <Text Include="..\shaders\PostProcessVertex.txt">
       <Filter>Shaders</Filter>
     </Text>
+    <Text Include="..\shaders\DeferredPos.txt">
+      <Filter>Shaders</Filter>
+    </Text>
+    <Text Include="..\shaders\DeferredAlbedo.txt">
+      <Filter>Shaders</Filter>
+    </Text>
+    <Text Include="..\shaders\DeferredNormal.txt">
+      <Filter>Shaders</Filter>
+    </Text>
+    <Text Include="..\shaders\DeferredFragment.txt">
+      <Filter>Shaders</Filter>
+    </Text>
   </ItemGroup>
 </Project>

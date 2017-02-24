@@ -50,11 +50,13 @@ protected:
 	Shader animNormal;
 	Shader basicAlbedo;
 	Shader animAlbedo;
+	Shader deferredRenderer;
 
 	// deferred rendring frame buffers
 	FrameBuffer* posBuffer;
 	FrameBuffer* normalBuffer;
 	FrameBuffer* albedoBuffer;
+	unsigned int deferredBuffers[3];
 
 	Instance* char1;
 	Instance* char2;

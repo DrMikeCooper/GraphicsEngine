@@ -36,9 +36,14 @@ void Shader::SetMatrix(const char* name, glm::mat4 value)
 
 void Shader::SetTexture(const char* name, int slot, Texture* texture)
 {
+	SetTexture(name, slot, texture->GetID());
+}
+
+void Shader::SetTexture(const char* name, int slot, unsigned int id)
+{
 	// set texture slot 0 to use the texture we created earlier
 	glActiveTexture(GL_TEXTURE0 + slot);
-	glBindTexture(GL_TEXTURE_2D, texture->GetID());
+	glBindTexture(GL_TEXTURE_2D, id);
 
 	// tell the shader where it is - use slot provided
 	unsigned int loc = glGetUniformLocation(m_id, name);
@@ -66,6 +71,7 @@ bool Shader::LoadShaderFromFile(const char* filePath, std::string& code)
 
 GLuint Shader::CompileShaders(const char* vsFile, const char* fsFile)
 {
+	printf("%s\n%s\n", vsFile, fsFile);
 	std::string vsCode, fsCode;
 	if (!(LoadShaderFromFile(vsFile, vsCode) && LoadShaderFromFile(fsFile, fsCode)))
 		printf("failed to load shaders");

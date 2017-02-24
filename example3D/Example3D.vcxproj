@@ -117,6 +117,10 @@
     <Text Include="..\shaders\AnimatedVertexShader.txt" />
     <Text Include="..\shaders\BasicFragmentShader.txt" />
     <Text Include="..\shaders\BasicVertexShader.txt" />
+    <Text Include="..\shaders\DeferredAlbedo.txt" />
+    <Text Include="..\shaders\DeferredFragment.txt" />
+    <Text Include="..\shaders\DeferredNormal.txt" />
+    <Text Include="..\shaders\DeferredPos.txt" />
     <Text Include="..\shaders\PostProcessFragment.txt" />
     <Text Include="..\shaders\PostProcessVertex.txt" />
   </ItemGroup>
